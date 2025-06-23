@@ -92,3 +92,48 @@ func (q *Queries) DeleteBook(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, deleteBookQuery, id)
 	return err
 }
+
+const getListBookQuery = `
+SELECT id, title, author, ISBN, quantity, category FROM books
+ORDER BY id
+LIMIT $1
+OFFSET $2
+`
+
+type GetListBookParams struct {
+	Limit  int64 `json:"limit"`
+	Offset int64 `json:"offset"`
+}
+
+func (q *Queries) GetListBook(ctx context.Context, arg GetListBookParams) ([]Book, error) {
+	rows, err := q.db.QueryContext(ctx, getBookQuery, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	items := []Book{}
+
+	for rows.Next() {
+		var d Book
+		err := rows.Scan(
+			&d.ID,
+			&d.Title,
+			&d.Author,
+			&d.ISBN,
+			&d.Quantity,
+			&d.Category,
+		)
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, d)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+	
+	return items, nil
+}
