@@ -2,12 +2,13 @@ package db
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
 )
 
 const createBookQuery = `
 INSERT INTO books ( title, author, ISBN, quantity, category ) 
-VALUES ($1, $2, $3, $4, $5) 
-RETURNING id, title, author, ISBN, quantity, category`
+VALUES (?, ?, ?, ?, ?)`
 
 type CreateBookParams struct {
 	Title    string `json:"title"`
@@ -17,24 +18,23 @@ type CreateBookParams struct {
 	Category string `json:"category"`
 }
 
-func (q *Queries) CreateBook(ctx context.Context, arg CreateBookParams) (Book, error) {
-	row := q.db.QueryRowContext(ctx, createBookQuery, arg.Title, arg.Author, arg.ISBN, arg.Quantity, arg.Category)
-	var d Book
-	err := row.Scan(
-		&d.ID,
-		&d.Title,
-		&d.Author,
-		&d.ISBN,
-		&d.Quantity,
-		&d.Category,
-	)
+func (q *Queries) CreateBook(ctx context.Context, arg CreateBookParams) (int64, error) {
+	res, err := q.db.ExecContext(ctx, createBookQuery, arg.Title, arg.Author, arg.ISBN, arg.Quantity, arg.Category)
+	if err != nil {
+		return 0, err
+	}
 
-	return d, err
+	newId, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return newId, nil
 }
 
 const getBookQuery = `
 SELECT id, title, author, ISBN, quantity, category FROM books
-WHERE id = $1
+WHERE id = ?
 `
 
 func (q *Queries) GetBook(ctx context.Context, id int64) (Book, error) {
@@ -54,9 +54,8 @@ func (q *Queries) GetBook(ctx context.Context, id int64) (Book, error) {
 
 const updateBookQuery = `
 UPDATE books
-SET Title=$1, Author=$2, ISBN=$3, Quantity=$4, category=$5
-WHERE id = $6
-RETURNING id, title, author, ISBN, quantity, category
+SET Title=?, Author=?, ISBN=?, Quantity=?, category=?
+WHERE id = ?
 `
 
 type UpdateBookParams struct {
@@ -68,24 +67,27 @@ type UpdateBookParams struct {
 	ID       int64  `json:"id"`
 }
 
-func (q *Queries) UpdateBook(ctx context.Context, arg UpdateBookParams) (Book, error) {
-	row := q.db.QueryRowContext(ctx, updateBookQuery, arg.Title, arg.Author, arg.ISBN, arg.Quantity, arg.Category, arg.ID)
-	var d Book
-	err := row.Scan(
-		&d.ID,
-		&d.Title,
-		&d.Author,
-		&d.ISBN,
-		&d.Quantity,
-		&d.Category,
-	)
+func (q *Queries) UpdateBook(ctx context.Context, arg UpdateBookParams) error {
+	res, err := q.db.ExecContext(ctx, updateBookQuery, arg.Title, arg.Author, arg.ISBN, arg.Quantity, arg.Category, arg.ID)
+	if err != nil {
+		return err
+	}
 
-	return d, err
+	rowsEff, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsEff < 1 {
+		return sql.ErrNoRows
+	}
+
+	return nil
 }
 
 const deleteBookQuery = `
 DELETE FROM books
-WHERE id = $1
+WHERE id = ?
 `
 
 func (q *Queries) DeleteBook(ctx context.Context, id int64) error {
@@ -96,8 +98,8 @@ func (q *Queries) DeleteBook(ctx context.Context, id int64) error {
 const getListBookQuery = `
 SELECT id, title, author, ISBN, quantity, category FROM books
 ORDER BY id
-LIMIT $1
-OFFSET $2
+LIMIT ? 
+OFFSET ?
 `
 
 type GetListBookParams struct {
@@ -106,7 +108,7 @@ type GetListBookParams struct {
 }
 
 func (q *Queries) GetListBook(ctx context.Context, arg GetListBookParams) ([]Book, error) {
-	rows, err := q.db.QueryContext(ctx, getBookQuery, arg.Limit, arg.Offset)
+	rows, err := q.db.QueryContext(ctx, getListBookQuery, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -130,10 +132,13 @@ func (q *Queries) GetListBook(ctx context.Context, arg GetListBookParams) ([]Boo
 		items = append(items, d)
 	}
 
+	fmt.Println(items)
+	fmt.Println(arg)
+
 	err = rows.Err()
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return items, nil
 }

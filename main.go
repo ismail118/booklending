@@ -2,14 +2,16 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/ismail118/booklending/api"
 	db "github.com/ismail118/booklending/db/sql"
 	"log"
+	"time"
 )
 
 const (
-	DBSOURCE = "mysql://root:password@tcp(localhost:3306)/booklending?tls=false"
+	DBSOURCE      = "root:password@tcp(localhost:3306)/booklending?tls=false&parseTime=true&loc=Local"
+	SERVERADDRESS = "0.0.0.0:8080"
 )
 
 func main() {
@@ -17,10 +19,25 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error cannot connect to database: %v", err)
 	}
+	// See "Important settings" section.
+	dbConn.SetConnMaxLifetime(time.Minute * 3)
+	dbConn.SetMaxOpenConns(10)
+	dbConn.SetMaxIdleConns(10)
+
 	defer dbConn.Close()
 
-	// TODO: use Queries
-	_ = db.NewQuerier(dbConn)
+	err = dbConn.Ping()
+	if err != nil {
+		log.Fatalf("Error ping to database: %v", err)
+	}
 
-	fmt.Println("test connect db")
+	querier := db.NewQuerier(dbConn)
+
+	server := api.NewServer(querier)
+	err = server.Start(SERVERADDRESS)
+	if err != nil {
+		log.Fatalf("Error cannot start server: %v", err)
+	}
+
+	log.Println("Starting server on", SERVERADDRESS)
 }

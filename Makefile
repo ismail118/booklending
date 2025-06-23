@@ -1,5 +1,9 @@
 install-mysql:
-	docker run --name mysql8 -p 3306:3306  -e MYSQL_ROOT_PASSWORD=password -d mysql:8
+	docker run --name mysql8 -p 3306:3306  -e MYSQL_ROOT_PASSWORD=password -d mysql:8 mysqld --mysql-native-password=ON
+
+bash-mysql:
+	docker exec -it mysql8 bash
+# fix err: Error 1045 (28000): Access denied for user 'mysql'@'172.17.0.1' (using password: YES)
 
 create-db:
 	docker exec mysql8 mysql -u root -p'password' -e "CREATE DATABASE IF NOT EXISTS booklending;"
@@ -19,4 +23,4 @@ migrate-down:
 migrate-force:
 	migrate -path db/migration -database "mysql://root:password@tcp(localhost:3306)/booklending?tls=false" force $(version)
 
-.PHONY: install-mysql create-db install-migrate new-migrate migrate-up migrate-down
+.PHONY: install-mysql create-db install-migrate new-migrate migrate-up migrate-down bash-mysql

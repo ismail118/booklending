@@ -36,8 +36,18 @@ func (server *Server) createBook(c *gin.Context) {
 
 	// TODO: handle proper error such duplicate unique field
 	// mysql error ref: https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html
-	book, err := server.querier.CreateBook(context.Background(), arg)
+	newId, err := server.querier.CreateBook(context.Background(), arg)
 	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	book, err := server.querier.GetBook(context.Background(), newId)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			c.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
@@ -99,8 +109,18 @@ func (server *Server) updateBook(c *gin.Context) {
 	}
 
 	// TODO: add propher error handling
-	book, err := server.querier.UpdateBook(context.Background(), arg)
+	err = server.querier.UpdateBook(context.Background(), arg)
 	if err != nil {
+		c.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	book, err := server.querier.GetBook(context.Background(), arg.ID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			c.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
