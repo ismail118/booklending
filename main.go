@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	db "github.com/ismail118/booklending/db/sql"
 	"log"
 )
 
@@ -17,6 +18,9 @@ func main() {
 		log.Fatalf("Error cannot connect to database: %v", err)
 	}
 	defer dbConn.Close()
+
+	// TODO: use Queries
+	_ = db.NewQuerier(dbConn)
 
 	fmt.Println("test connect db")
 }
