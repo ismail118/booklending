@@ -29,4 +29,9 @@ $ go run main.go
 ---
 
 ## Table Schema
-![Teks Alternatif (Deskripsi Gambar)](bookleading.png)
+![Table (Schema Table)](bookleading.png)
+
+---
+
+## Project Structure
+![Table (Schema Table)](Screenshot.png)
