@@ -35,3 +35,13 @@ $ go run main.go
 
 ## Project Structure
 ![Table (Schema Table)](Screenshot.png)
+
+## Major Technical Decision
+
+### PASETO token insted JWT token
+PASETO is safeties and easy to use then JWT, becasue JWT give developer so much options and way to implement token that 
+often lead developer that not really familiar with security to make mistake and vulnerable security issue.
+
+### Store HashedPassword insted Naked Password
+This is best practice to always store password in hashed form insted naked password for security reason
+
