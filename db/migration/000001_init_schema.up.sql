@@ -18,7 +18,6 @@ CREATE TABLE `lending_records` (
                                    `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                    `book` bigint NOT NULL,
                                    `borrower` bigint NOT NULL,
-                                   `is_return` boolean NOT NULL DEFAULT false,
                                    `borrow_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                    `return_date` TIMESTAMP NULL DEFAULT NULL
 );
