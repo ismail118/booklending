@@ -37,8 +37,10 @@ func (server *Server) setupRouter() {
 
 	router.POST("/user/login", server.loginUser)
 
-	router.POST("/borrowbook", server.createBorrowBook)
-	router.POST("/returnbook", server.returnBook)
+	authRouth := router.Group("/")
+	authRouth.Use(authMiddleware(server.paseto))
+	authRouth.POST("/borrowbook", server.createBorrowBook)
+	authRouth.POST("/returnbook", server.returnBook)
 
 	server.router = router
 }
