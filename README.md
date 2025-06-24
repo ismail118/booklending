@@ -45,3 +45,11 @@ often lead developer that not really familiar with security to make mistake and 
 ### Store HashedPassword insted Naked Password
 This is best practice to always store password in hashed form insted naked password for security reason
 
+### Using Viper for config app
+This is best practice to place any configuration (e.g secretkey or any credential) to separate file instead hardcode
+
+---
+
+## Place To Improve
+
+### ***Implement database transaction for reliable and consistency data
