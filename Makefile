@@ -32,4 +32,10 @@ build-image:
 compose-up:
 	docker compose up --build
 
+gomock-install:
+	go install github.com/golang/mock/mockgen@v1.6.0
+
+mock:
+	mockgen -package mockdb -destination db/mock/querier.go github.com/ismail118/booklending/db/sql Querier
+
 .PHONY: install-mysql create-db install-migrate new-migrate migrate-up migrate-down bash-mysql go-test build-image compose-up

@@ -11,5 +11,22 @@ Untuk detail lengkap mengenai API proyek ini, termasuk endpoint, parameter, dan 
 Atau Anda bisa langsung mengaksesnya di: `https://documenter.getpostman.com/view/17086351/2sB2xCiVCB`
 
 ---
+
+## Setup Instruction
+Run Following command :
+### Install Mysql
+$ make install-mysql
+### Create DB In Mysql
+$ make create-db
+### Install golang-migrate
+$ make install-migrate
+### Run Migration
+$ make migrate-up
+
+### Run the Go application
+$ go run main.go
+
+---
+
 ## Table Schema
 ![Teks Alternatif (Deskripsi Gambar)](bookleading.png)

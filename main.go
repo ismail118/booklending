@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	DBSOURCE      = "root:password@tcp(db:3306)/booklending?tls=false&parseTime=true&loc=Local"
+	DBSOURCE      = "root:password@tcp(localhost:3306)/booklending?tls=false&parseTime=true&loc=Local"
 	SERVERADDRESS = "0.0.0.0:8080"
 	TokenKey      = "abcdefghijklmnovqrstuvwxyz123456"
 )
