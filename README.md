@@ -48,6 +48,9 @@ This is best practice to always store password in hashed form insted naked passw
 ### Using Viper for config app
 This is best practice to place any configuration (e.g secretkey or any credential) to separate file instead hardcode
 
+### Dockerfile with 2 stage
+Build docker image with 2 stage for make lightwage docker image, stage 1 for build golang executable app and 
+stage 2 copy executable file from builder to run in lightwage os like linux alphine
 ---
 
 ## Place To Improve
