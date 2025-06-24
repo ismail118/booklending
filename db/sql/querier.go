@@ -3,6 +3,14 @@ package db
 import (
 	"context"
 	"database/sql"
+	"errors"
+)
+
+// error ref: https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html
+// used: errors.As(err, ErrForeignKeyViolation)
+var (
+	ErrForeignKeyViolation = errors.New("a foreign key constraint fails")
+	ErrCannotAddForeignKey = errors.New("Cannot add foreign key constraint")
 )
 
 type Querier interface {
@@ -14,9 +22,10 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (int64, error)
 	GetUser(ctx context.Context, email string) (User, error)
 	CreateLendingRecords(ctx context.Context, arg CreateLendingRecordsParams) (int64, error)
-	ReturnBook(ctx context.Context, arg returnBookParams) error
+	ReturnBook(ctx context.Context, arg ReturnBookParams) error
 	GetListLendingRecordByBorrower(ctx context.Context, borrower int64) ([]LendingRecord, error)
 	GetLendingRecord(ctx context.Context, id int64) (LendingRecord, error)
+	UpdateBookQty(ctx context.Context, arg UpdateBookQtyParams) error
 }
 
 func NewQuerier(db *sql.DB) Querier {

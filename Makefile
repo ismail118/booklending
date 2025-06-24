@@ -23,4 +23,7 @@ migrate-down:
 migrate-force:
 	migrate -path db/migration -database "mysql://root:password@tcp(localhost:3306)/booklending?tls=false" force $(version)
 
-.PHONY: install-mysql create-db install-migrate new-migrate migrate-up migrate-down bash-mysql
+go-test:
+	go test ./... -v
+
+.PHONY: install-mysql create-db install-migrate new-migrate migrate-up migrate-down bash-mysql go-test

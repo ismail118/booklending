@@ -138,3 +138,32 @@ func (q *Queries) GetListBook(ctx context.Context, arg GetListBookParams) ([]Boo
 
 	return items, nil
 }
+
+const updateBookQtyQuery = `
+UPDATE books
+SET quantity= quantity + ?
+WHERE id = ?
+`
+
+type UpdateBookQtyParams struct {
+	Qty int64 `json:"qty"`
+	ID  int64 `json:"id"`
+}
+
+func (q *Queries) UpdateBookQty(ctx context.Context, arg UpdateBookQtyParams) error {
+	res, err := q.db.ExecContext(ctx, updateBookQtyQuery, arg.Qty, arg.ID)
+	if err != nil {
+		return err
+	}
+
+	rowsEff, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsEff < 1 {
+		return sql.ErrNoRows
+	}
+
+	return nil
+}

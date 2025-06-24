@@ -35,13 +35,13 @@ SET return_date= ?
 WHERE id = ?
 `
 
-type returnBookParams struct {
+type ReturnBookParams struct {
 	ID         int64     `json:"id"`
 	ReturnDate time.Time `json:"return_date"`
 }
 
-func (q *Queries) ReturnBook(ctx context.Context, arg returnBookParams) error {
-	res, err := q.db.ExecContext(ctx, updateBookQuery, arg.ReturnDate, arg.ID)
+func (q *Queries) ReturnBook(ctx context.Context, arg ReturnBookParams) error {
+	res, err := q.db.ExecContext(ctx, returnBookQuery, arg.ReturnDate, arg.ID)
 	if err != nil {
 		return err
 	}
@@ -59,7 +59,7 @@ func (q *Queries) ReturnBook(ctx context.Context, arg returnBookParams) error {
 }
 
 const getListLendingRecordByBorrowerQuery = `
-SELECT id, book, borrower, borrow_date FROM lending_records
+SELECT id, book, borrower, borrow_date, return_date FROM lending_records
 WHERE borrower = ? AND return_date = NULL
 `
 
@@ -96,7 +96,7 @@ func (q *Queries) GetListLendingRecordByBorrower(ctx context.Context, borrower i
 }
 
 const getLendingRecordQuery = `
-SELECT id, book, borrower, borrow_date FROM lending_records
+SELECT id, book, borrower, borrow_date, return_date FROM lending_records
 WHERE id = ?
 `
 
