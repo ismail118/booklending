@@ -3,16 +3,19 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	db "github.com/ismail118/booklending/db/sql"
+	"github.com/ismail118/booklending/token"
 )
 
 type Server struct {
 	querier db.Querier
 	router  *gin.Engine
+	paseto  *token.Paseto
 }
 
-func NewServer(querier db.Querier) *Server {
+func NewServer(querier db.Querier, paseto *token.Paseto) *Server {
 	server := &Server{
 		querier: querier,
+		paseto:  paseto,
 	}
 
 	server.setupRouter()
@@ -31,6 +34,8 @@ func (server *Server) setupRouter() {
 	router.PUT("/books", server.updateBook)
 	router.DELETE("/books/:id", server.deleteBook)
 	router.GET("/books", server.getListBooks)
+
+	router.POST("/user/login", server.loginUser)
 
 	server.router = router
 }
