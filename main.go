@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	DBSOURCE      = "root:password@tcp(localhost:3306)/booklending?tls=false&parseTime=true&loc=Local"
+	DBSOURCE      = "root:password@tcp(db:3306)/booklending?tls=false&parseTime=true&loc=Local"
 	SERVERADDRESS = "0.0.0.0:8080"
 	TokenKey      = "abcdefghijklmnovqrstuvwxyz123456"
 )
@@ -22,11 +22,6 @@ func main() {
 	}
 
 	defer dbConn.Close()
-
-	err = dbConn.Ping()
-	if err != nil {
-		log.Fatalf("Error ping to database: %v", err)
-	}
 
 	querier := db.NewQuerier(dbConn)
 

@@ -26,4 +26,10 @@ migrate-force:
 go-test:
 	go test ./... -v
 
-.PHONY: install-mysql create-db install-migrate new-migrate migrate-up migrate-down bash-mysql go-test
+build-image:
+	docker build -t booklending:latest .
+
+compose-up:
+	docker compose up --build
+
+.PHONY: install-mysql create-db install-migrate new-migrate migrate-up migrate-down bash-mysql go-test build-image compose-up
