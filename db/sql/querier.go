@@ -11,6 +11,8 @@ type Querier interface {
 	UpdateBook(ctx context.Context, arg UpdateBookParams) error
 	DeleteBook(ctx context.Context, id int64) error
 	GetListBook(ctx context.Context, arg GetListBookParams) ([]Book, error)
+	CreateUser(ctx context.Context, arg CreateUserParams) (int64, error)
+	GetUser(ctx context.Context, email string) (User, error)
 }
 
 func NewQuerier(db *sql.DB) Querier {
