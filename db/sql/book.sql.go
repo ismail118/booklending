@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"fmt"
 )
 
 const createBookQuery = `
@@ -54,7 +53,7 @@ func (q *Queries) GetBook(ctx context.Context, id int64) (Book, error) {
 
 const updateBookQuery = `
 UPDATE books
-SET Title=?, Author=?, ISBN=?, Quantity=?, category=?
+SET title=?, author=?, ISBN=?, quantity=?, category=?
 WHERE id = ?
 `
 
@@ -131,9 +130,6 @@ func (q *Queries) GetListBook(ctx context.Context, arg GetListBookParams) ([]Boo
 		}
 		items = append(items, d)
 	}
-
-	fmt.Println(items)
-	fmt.Println(arg)
 
 	err = rows.Err()
 	if err != nil {

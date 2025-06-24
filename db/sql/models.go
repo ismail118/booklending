@@ -25,7 +25,6 @@ type LendingRecord struct {
 	ID         int64        `json:"id"`
 	Book       int64        `json:"book"`
 	Borrower   int64        `json:"borrower"`
-	IsReturn   bool         `json:"is_return"`
 	BorrowDate time.Time    `json:"borrow_date"`
 	ReturnDate sql.NullTime `json:"return_date"`
 }
