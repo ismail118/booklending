@@ -6,7 +6,6 @@ import (
 	"github.com/ismail118/booklending/api"
 	db "github.com/ismail118/booklending/db/sql"
 	"log"
-	"time"
 )
 
 const (
@@ -19,10 +18,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error cannot connect to database: %v", err)
 	}
-	// See "Important settings" section.
-	dbConn.SetConnMaxLifetime(time.Minute * 3)
-	dbConn.SetMaxOpenConns(10)
-	dbConn.SetMaxIdleConns(10)
 
 	defer dbConn.Close()
 
