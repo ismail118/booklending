@@ -11,6 +11,7 @@ import (
 var (
 	ErrForeignKeyViolation = errors.New("a foreign key constraint fails")
 	ErrCannotAddForeignKey = errors.New("Cannot add foreign key constraint")
+	ErrUniqueViolation     = errors.New("Error 1062 (23000)")
 )
 
 type Querier interface {

@@ -34,10 +34,12 @@ func (server *Server) createBook(c *gin.Context) {
 		Category: req.Category,
 	}
 
-	// TODO: handle proper error such duplicate unique field
-	// mysql error ref: https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html
 	newId, err := server.querier.CreateBook(context.Background(), arg)
 	if err != nil {
+		if errors.As(err, &db.ErrUniqueViolation) {
+			c.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
@@ -108,9 +110,16 @@ func (server *Server) updateBook(c *gin.Context) {
 		Category: req.Category,
 	}
 
-	// TODO: add propher error handling
 	err = server.querier.UpdateBook(context.Background(), arg)
 	if err != nil {
+		if errors.As(err, &db.ErrUniqueViolation) {
+			c.JSON(http.StatusBadRequest, errorResponse(err))
+			return
+		}
+		if errors.Is(err, sql.ErrNoRows) {
+			c.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
@@ -151,7 +160,7 @@ func (server *Server) deleteBook(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, "Success")
+	c.JSON(http.StatusOK, "Delete Success")
 }
 
 type getListBooksRequest struct {

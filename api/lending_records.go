@@ -13,7 +13,7 @@ import (
 
 var ErrHaveReachMaxBorrow = errors.New("have reach max borrow")
 
-const numMaxBorrows = 7
+const numMaxBorrows = 5
 
 type createBorrowBookRequest struct {
 	Book     int64 `json:"book" binding:"required,min=1"`
@@ -48,6 +48,7 @@ func (server *Server) createBorrowBook(c *gin.Context) {
 
 	if len(listLandingRecord) > numMaxBorrows {
 		c.JSON(http.StatusForbidden, errorResponse(ErrHaveReachMaxBorrow))
+		return
 	}
 
 	// TODO: check if book has enough qty
@@ -107,10 +108,13 @@ func (server *Server) returnBook(c *gin.Context) {
 		ID:         req.ID,
 		ReturnDate: time.Now(),
 	}
-
-	// TODO: add propher error handling
+	
 	err = server.querier.ReturnBook(context.Background(), arg)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			c.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
