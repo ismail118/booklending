@@ -32,7 +32,7 @@ func (q *Queries) CreateLendingRecords(ctx context.Context, arg CreateLendingRec
 const returnBookQuery = `
 UPDATE lending_records
 SET return_date= ?
-WHERE id = ? AND return_date = NULL
+WHERE id = ? AND return_date IS NULL
 `
 
 type ReturnBookParams struct {
