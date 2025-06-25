@@ -60,7 +60,7 @@ func (q *Queries) ReturnBook(ctx context.Context, arg ReturnBookParams) error {
 
 const getListLendingRecordByBorrowerQuery = `
 SELECT id, book, borrower, borrow_date, return_date FROM lending_records
-WHERE borrower = ? AND return_date = NULL
+WHERE borrower = ? AND return_date IS NULL
 `
 
 func (q *Queries) GetListLendingRecordByBorrower(ctx context.Context, borrower int64) ([]LendingRecord, error) {
