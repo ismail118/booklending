@@ -11,6 +11,7 @@ import (
 )
 
 type userResponse struct {
+	ID    int64  `json:"id"`
 	Email string `json:"email"`
 	Name  string `json:"name"`
 }
@@ -59,6 +60,7 @@ func (server *Server) loginUser(c *gin.Context) {
 	resp := loginResponse{
 		AccessToken: token,
 		User: userResponse{
+			ID:    user.ID,
 			Email: user.Email,
 			Name:  user.Name,
 		},
