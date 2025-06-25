@@ -88,7 +88,7 @@ type updateBookRequest struct {
 	Title    string `json:"title" binding:"required"`
 	Author   string `json:"author" binding:"required"`
 	ISBN     string `json:"ISBN" binding:"required"`
-	Quantity int64  `json:"quantity" binding:"required,min=1"`
+	Quantity int64  `json:"quantity" binding:"required"`
 	Category string `json:"category" binding:"required"`
 }
 
