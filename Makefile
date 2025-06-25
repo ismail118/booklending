@@ -1,5 +1,5 @@
 install-mysql:
-	docker run --name mysql8 -p 3306:3306  -e MYSQL_ROOT_PASSWORD=password -d mysql:8 mysqld --mysql-native-password=ON
+	docker run --name mysql8 -p 3306:3306  -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=booklending -d mysql:8 mysqld --mysql-native-password=ON
 
 bash-mysql:
 	docker exec -it mysql8 bash

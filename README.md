@@ -16,8 +16,6 @@ Atau Anda bisa langsung mengaksesnya di: `https://documenter.getpostman.com/view
 Run Following command :
 ### Install Mysql
 $ make install-mysql
-### Create DB In Mysql
-$ make create-db
 ### Install golang-migrate
 $ make install-migrate
 ### Run Migration
