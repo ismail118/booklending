@@ -117,7 +117,7 @@ func (server *Server) updateBook(c *gin.Context) {
 			return
 		}
 		if errors.Is(err, sql.ErrNoRows) {
-			c.JSON(http.StatusNotFound, errorResponse(err))
+			c.JSON(http.StatusBadRequest, errorResponse(err))
 			return
 		}
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
@@ -152,10 +152,6 @@ func (server *Server) deleteBook(c *gin.Context) {
 
 	err = server.querier.DeleteBook(context.Background(), req.ID)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			c.JSON(http.StatusNotFound, errorResponse(err))
-			return
-		}
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
