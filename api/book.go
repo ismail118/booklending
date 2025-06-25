@@ -180,10 +180,6 @@ func (server *Server) getListBooks(c *gin.Context) {
 
 	books, err := server.querier.GetListBook(context.Background(), arg)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			c.JSON(http.StatusNotFound, errorResponse(err))
-			return
-		}
 		c.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
