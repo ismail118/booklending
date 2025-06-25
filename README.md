@@ -55,6 +55,7 @@ stage 2 copy executable file from builder to run in lightwage os like linux alph
 ## Place To Improve
 
 ### ***Implement database transaction for reliable and consistency data
+### ***Implement Authorization such current authenticated user only can borrow book for himself, not for other user too
 
 ---
 
