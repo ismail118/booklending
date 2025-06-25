@@ -51,8 +51,6 @@ func (server *Server) createBorrowBook(c *gin.Context) {
 		return
 	}
 
-	// TODO: check if book has enough qty
-
 	newId, err := server.querier.CreateLendingRecords(context.Background(), arg)
 	if err != nil {
 		if errors.As(err, &db.ErrForeignKeyViolation) {
@@ -108,7 +106,7 @@ func (server *Server) returnBook(c *gin.Context) {
 		ID:         req.ID,
 		ReturnDate: time.Now(),
 	}
-	
+
 	err = server.querier.ReturnBook(context.Background(), arg)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
