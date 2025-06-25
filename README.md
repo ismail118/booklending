@@ -50,6 +50,11 @@ This is best practice to place any configuration (e.g secretkey or any credentia
 Build docker image with 2 stage for make lightwage docker image, stage 1 for build golang executable app and 
 stage 2 copy executable file from builder to run in lightwage os like linux alphine
 
+### Return book endpoint param
+i am use lending_records.id and book.id insted user.id and book.id for user to returning borrowing book,
+because now user can borrow same book, so if user have 5 borrowing for same book, it will prevent user
+for return one book for all 5 book that he borrow and not return yet
+
 ---
 
 ## Place To Improve
