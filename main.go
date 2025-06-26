@@ -51,6 +51,7 @@ func readConfig(path string) (util.Config, error) {
 	if err != nil {
 		return config, fmt.Errorf("cannot read file config: %v", err)
 	}
+	viper.AutomaticEnv()
 	err = viper.Unmarshal(&config)
 	if err != nil {
 		return config, fmt.Errorf("cannot unmarshal config: %v", err)

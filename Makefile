@@ -38,4 +38,8 @@ gomock-install:
 mock:
 	mockgen -package mockdb -destination db/mock/querier.go github.com/ismail118/booklending/db/sql Querier
 
+compose-up:
+	docker-compose up --build
+	docker exec -it bookleading migrate -path db/migration -database "mysql://root:password@tcp(db:3306)/booklending?tls=false&parseTime=true&loc=Local" up
+
 .PHONY: install-mysql create-db install-migrate new-migrate migrate-up migrate-down bash-mysql go-test build-image compose-up

@@ -20,10 +20,13 @@ $ make install-mysql
 $ make install-migrate
 ### Run Migration
 $ make migrate-up
-
 ### Run the Go application
 $ go run main.go
 
+---
+## Setup With Docker Compose
+### Run following command:
+$ make compose-up
 ---
 
 ## Table Schema

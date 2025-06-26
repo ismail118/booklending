@@ -17,6 +17,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: bookleading
+    environment:
+      DB_SOURCE: root:password@tcp(db:3306)/booklending?tls=false&parseTime=true&loc=Local
     ports:
       - "8080:8080"
     depends_on:
