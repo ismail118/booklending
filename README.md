@@ -24,9 +24,11 @@ $ make migrate-up
 $ go run main.go
 
 ---
+
 ## Setup With Docker Compose
 ### Run following command:
 $ make compose-up
+
 ---
 
 ## Table Schema
