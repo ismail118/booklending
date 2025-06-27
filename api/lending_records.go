@@ -53,7 +53,7 @@ func (server *Server) createBorrowBook(c *gin.Context) {
 
 	newId, err := server.querier.CreateLendingRecords(context.Background(), arg)
 	if err != nil {
-		if errors.As(err, &db.ErrForeignKeyViolation) {
+		if db.IsSqlErr(err, db.ErrNumForeignKeyViolation) {
 			c.JSON(http.StatusBadRequest, errorResponse(err))
 			return
 		}

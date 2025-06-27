@@ -4,14 +4,14 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"github.com/go-sql-driver/mysql"
 )
 
 // error ref: https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html
-// used: errors.As(err, ErrForeignKeyViolation)
+// used: db.IsSqlErr(err, db.ErrNumForeignKeyViolation)
 var (
-	ErrForeignKeyViolation = errors.New("a foreign key constraint fails")
-	ErrCannotAddForeignKey = errors.New("Cannot add foreign key constraint")
-	ErrUniqueViolation     = errors.New("Error 1062 (23000)")
+	ErrNumForeignKeyViolation uint16 = 1216
+	ErrNumUniqueViolation     uint16 = 1062
 )
 
 type Querier interface {
@@ -35,4 +35,13 @@ func NewQuerier(db *sql.DB) Querier {
 
 type Queries struct {
 	db *sql.DB
+}
+
+func IsSqlErr(err error, errNum uint16) bool {
+	var mysqlErr *mysql.MySQLError
+	if errors.As(err, &mysqlErr) {
+		return mysqlErr.Number == errNum
+	}
+
+	return false
 }

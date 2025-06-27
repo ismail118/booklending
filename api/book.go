@@ -36,7 +36,7 @@ func (server *Server) createBook(c *gin.Context) {
 
 	newId, err := server.querier.CreateBook(context.Background(), arg)
 	if err != nil {
-		if errors.As(err, &db.ErrUniqueViolation) {
+		if db.IsSqlErr(err, db.ErrNumUniqueViolation) {
 			c.JSON(http.StatusBadRequest, errorResponse(err))
 			return
 		}
@@ -112,7 +112,7 @@ func (server *Server) updateBook(c *gin.Context) {
 
 	err = server.querier.UpdateBook(context.Background(), arg)
 	if err != nil {
-		if errors.As(err, &db.ErrUniqueViolation) {
+		if db.IsSqlErr(err, db.ErrNumUniqueViolation) {
 			c.JSON(http.StatusBadRequest, errorResponse(err))
 			return
 		}
